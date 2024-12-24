@@ -71,38 +71,54 @@ class H1Cfg(LeggedRobotCfg):
         pos = [0.0, 0.0, 0.95]
 
         # 18 Actions
-        default_joint_angles = { # = target angles [rad] when action = 0.0
-           'left_hip_yaw_joint' : 0. ,
-           'left_hip_roll_joint' : 0,
-           'left_hip_pitch_joint' : -0.4,
-           'left_knee_joint' : 0.8,
-           'left_ankle_joint' : -0.4,
-           'right_hip_yaw_joint' : 0.,
-           'right_hip_roll_joint' : 0,
-           'right_hip_pitch_joint' : -0.4,
-           'right_knee_joint' : 0.8,
-           'right_ankle_joint' : -0.4,
-
-           'left_shoulder_pitch_joint' : 0.,
-           'left_shoulder_roll_joint' : 0,
-           'left_shoulder_yaw_joint' : 0.,
-           'left_elbow_joint'  : 0.,
-           'right_shoulder_pitch_joint' : 0.,
-           'right_shoulder_roll_joint' : 0.0,
-           'right_shoulder_yaw_joint' : 0.,
-           'right_elbow_joint' : 0.,
+        default_joint_angles = {  # = target angles [rad] when action = 0.0
+            'left_hip_yaw_joint': 0.,
+            'left_hip_roll_joint': 0,
+            'left_hip_pitch_joint': -0.4,
+            'left_knee_joint': 0.8,
+            'left_ankle_joint': -0.4,
+            'right_hip_yaw_joint': 0.,
+            'right_hip_roll_joint': 0,
+            'right_hip_pitch_joint': -0.4,
+            'right_knee_joint': 0.8,
+            'right_ankle_joint': -0.4,
+            'torso_joint': 0.,
+            'left_shoulder_pitch_joint': 0.,
+            'left_shoulder_roll_joint': 0,
+            'left_shoulder_yaw_joint': 0.,
+            'left_elbow_joint': 0.,
+            'right_shoulder_pitch_joint': 0.,
+            'right_shoulder_roll_joint': 0.0,
+            'right_shoulder_yaw_joint': 0.,
+            'right_elbow_joint': 0.,
         }
 
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
-        stiffness = {'hip_roll': 200.0, 'hip_pitch': 350.0, 'hip_yaw': 200.0,
-                     'knee': 350.0, 'ankle': 15,
-                     'shoulder_roll': 200.0, 'shoulder_pitch': 350.0, 'shoulder_yaw': 200.0,
-                     'elbow': 350.0 }
-        damping = {'hip_roll': 10, 'hip_pitch': 10, 'hip_yaw':
-                   10, 'knee': 10, 'ankle': 10,
-                   'shoulder_roll': 10, 'shoulder_pitch': 10, 'shoulder_yaw': 10,
-                     'elbow': 10 }
+        stiffness = {
+            'hip_roll': 200.0,
+            'hip_yaw': 200.0,
+            'hip_pitch': 200.0,
+            'knee': 200.0,
+            'ankle': 15.0,
+            'torso': 300.0,
+            'shoulder_roll': 50.0,
+            'shoulder_pitch': 50.0,
+            'shoulder_yaw': 50.0,
+            'elbow': 150.0
+        }
+        damping = {
+            'hip_roll': 5.0,
+            'hip_yaw': 5.0,
+            'hip_pitch': 10.0,
+            'knee': 10.0,
+            'ankle': 2.0,
+            'torso': 6.0,
+            'shoulder_roll': 2.0,
+            'shoulder_pitch': 2.0,
+            'shoulder_yaw': 2.0,
+            'elbow': 2.0
+        }
 
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.25
@@ -150,7 +166,7 @@ class H1Cfg(LeggedRobotCfg):
         class ranges:
             lin_vel_x = [-0.3, 0.6]   # min max [m/s]
             lin_vel_y = [-0.3, 0.3]   # min max [m/s]
-            ang_vel_yaw = [-0.3, 0.3] # min max [rad/s]
+            ang_vel_yaw = [-0.3, 0.3]  # min max [rad/s]
             heading = [-3.14, 3.14]
 
     class rewards:
@@ -233,7 +249,8 @@ class H1CfgPPO(LeggedRobotCfgPPO):
         max_iterations = 500  # number of policy updates
 
         # logging
-        save_interval = 100  # Please check for potential savings every `save_interval` iterations.
+        # Please check for potential savings every `save_interval` iterations.
+        save_interval = 100
         experiment_name = 'H1_ppo'
         run_name = ''
         # Load and resume

@@ -117,7 +117,7 @@ def fbx_to_npy(file_name_in, root_joint_name, fps):
     fbx_fps = frame_count / time_range_sec
     if fps != 120:
         fbx_fps = fps
-    print("FPS: ", fbx_fps)
+    # print("FPS: ", fbx_fps)
     while time_sec < anim_range.GetStop().GetSecondDouble():
         fbx_time = fbx.FbxTime()
         fbx_time.SetSecondDouble(time_sec)
@@ -145,7 +145,7 @@ def fbx_to_npy(file_name_in, root_joint_name, fps):
         time_sec += (1.0/fbx_fps)
 
     local_transforms = np.array(local_transforms)
-    print("Frame Count: ", len(local_transforms))
+    # print("Frame Count: ", len(local_transforms))
 
     return joint_names, parents, local_transforms, fbx_fps
 

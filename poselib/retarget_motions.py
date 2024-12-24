@@ -26,26 +26,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
+
 from isaacgym.torch_utils import *
 import torch
 import json
 import numpy as np
 
 from poselib.core.rotation3d import *
-from poselib.skeleton.skeleton3d import SkeletonTree, SkeletonState, SkeletonMotion
-from poselib.visualization.common import plot_skeleton_state, plot_skeleton_motion_interactive
+from poselib.skeleton.skeleton3d import SkeletonState, SkeletonMotion
 
-"""
-This scripts shows how to retarget a motion clip from the source skeleton to a target skeleton.
-Data required for retargeting are stored in a retarget config dictionary as a json file. This file contains:
-  - source_motion: a SkeletonMotion npy format representation of a motion sequence. The motion clip should use the same skeleton as the source T-Pose skeleton.
-  - target_motion_path: path to save the retargeted motion to
-  - source_tpose: a SkeletonState npy format representation of the source skeleton in it's T-Pose state
-  - target_tpose: a SkeletonState npy format representation of the target skeleton in it's T-Pose state (pose should match source T-Pose)
-  - joint_mapping: mapping of joint names from source to target
-  - rotation: root rotation offset from source to target skeleton (for transforming across different orientation axes), represented as a quaternion in XYZW order.
-  - scale: scale offset from source to target skeleton
-"""
+from tqdm import tqdm
 
 VISUALIZE = False
 
@@ -203,48 +194,21 @@ def project_joints(motion):
     
     return new_motion
 
-# source fbx file path
-fbx_file = "data/01_01.fbx"
-
-def main():
-    # load retarget config
-    retarget_data_path = "data/configs/retarget_cmu_to_h1.json"
-    with open(retarget_data_path) as f:
-        retarget_data = json.load(f)
-
-    # load and visualize t-pose files
-    source_tpose = SkeletonState.from_file(retarget_data["source_tpose"])
-    if VISUALIZE:
-        plot_skeleton_state(source_tpose)
-
-    target_tpose = SkeletonState.from_file(retarget_data["target_tpose"])
-    if VISUALIZE:
-        plot_skeleton_state(target_tpose)
-
-    # load and visualize source motion sequence
-    source_motion = SkeletonMotion.from_fbx(
-        fbx_file_path=fbx_file,
-        root_joint="Hips",
-        fps=60
-    )
-    # source_motion = SkeletonMotion.from_file(retarget_data["source_motion"])
-    if VISUALIZE:
-        plot_skeleton_motion_interactive(source_motion)
-
-    # parse data from retarget config
-    joint_mapping = retarget_data["joint_mapping"]
-    rotation_to_target_skeleton = torch.tensor(retarget_data["rotation"])
-
-    # run retargeting
+def process(file_name):
+    source_motion_file = os.path.join(source_motion_path, file_name)
+    target_motion_file = os.path.join(target_motion_path, file_name)
+    
+    source_motion = SkeletonMotion.from_file(source_motion_file)
+    
     target_motion = source_motion.retarget_to_by_tpose(
-      joint_mapping=joint_mapping,
-      source_tpose=source_tpose,
-      target_tpose=target_tpose,
-      rotation_to_target_skeleton=rotation_to_target_skeleton,
-      scale_to_target_skeleton=retarget_data["scale"]
+        joint_mapping=joint_mapping,
+        source_tpose=source_tpose,
+        target_tpose=target_tpose,
+        rotation_to_target_skeleton=rotation_to_target_skeleton,
+        scale_to_target_skeleton=scale_to_target_skeleton
     )
-
-    # keep frames between [trim_frame_beg, trim_frame_end - 1]
+    
+    # Post processing rotation
     frame_beg = retarget_data["trim_frame_beg"]
     frame_end = retarget_data["trim_frame_end"]
     if (frame_beg == -1):
@@ -258,33 +222,32 @@ def main():
     local_rotation = local_rotation[frame_beg:frame_end, ...]
     root_translation = root_translation[frame_beg:frame_end, ...]
       
-    new_sk_state = SkeletonState.from_rotation_and_root_translation(target_motion.skeleton_tree, local_rotation, root_translation, is_local=True)
-    target_motion = SkeletonMotion.from_skeleton_state(new_sk_state, fps=target_motion.fps)
-
-    # need to convert some joints from 3D to 1D (e.g. elbows and knees)
-    # target_motion = project_joints(target_motion)
-
-    # move the root so that the feet are on the ground
-    local_rotation = target_motion.local_rotation
-    root_translation = target_motion.root_translation
-    tar_global_pos = target_motion.global_translation
+    tar_global_pos = target_motion.global_translation[frame_beg:frame_end, ...]
     min_h = torch.min(tar_global_pos[..., 2])
     root_translation[:, 2] += -min_h
-    
-    # adjust the height of the root to avoid ground penetration
-    root_height_offset = retarget_data["root_height_offset"]
-    root_translation[:, 2] += root_height_offset
-    
+
     new_sk_state = SkeletonState.from_rotation_and_root_translation(target_motion.skeleton_tree, local_rotation, root_translation, is_local=True)
     target_motion = SkeletonMotion.from_skeleton_state(new_sk_state, fps=target_motion.fps)
 
     # save retargeted motion
-    target_motion.to_file(retarget_data["target_motion_path"])
+    target_motion.to_file(target_motion_file)
 
-    # visualize retargeted motion
-    plot_skeleton_motion_interactive(target_motion)
-    
-    return
 
-if __name__ == '__main__':
-    main()
+# load retarget config
+retarget_data_path = "data/configs/retarget_cmu_to_h1.json"
+with open(retarget_data_path) as f:
+    retarget_data = json.load(f)
+
+joint_mapping = retarget_data["joint_mapping"]
+rotation_to_target_skeleton = torch.tensor(retarget_data["rotation"])
+scale_to_target_skeleton = retarget_data["scale"]
+
+# load and visualize t-pose files
+source_tpose = SkeletonState.from_file(retarget_data["source_tpose"])
+target_tpose = SkeletonState.from_file(retarget_data["target_tpose"])
+
+source_motion_path = retarget_data["source_motion_path"]
+target_motion_path = retarget_data["target_motion_path"]
+
+for source_file in tqdm(os.listdir(source_motion_path), desc="Retargeting motions"):
+    process(source_file)

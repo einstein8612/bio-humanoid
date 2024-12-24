@@ -28,20 +28,52 @@
 
 
 import os
-import json
+from poselib.skeleton.skeleton3d import SkeletonMotion
+from tqdm import tqdm
+from multiprocessing import Pool, Lock, Value
 
-from poselib.skeleton.skeleton3d import SkeletonTree, SkeletonState, SkeletonMotion
-from poselib.visualization.common import plot_skeleton_state, plot_skeleton_motion_interactive
+# Define folders
+cmu_folder = "data/cmu"
+motion_folder = "data/motions"
+files = os.listdir(cmu_folder)
 
-# source fbx file path
-fbx_file = "data/01_01.fbx"
+# Shared counter and lock for progress bar
+counter = Value('i', 0)
+lock = Lock()
 
-# import fbx file - make sure to provide a valid joint name for root_joint
-motion = SkeletonMotion.from_fbx(
-    fbx_file_path=fbx_file,
-    root_joint="Hips",
-    fps=60
-)
+def _process(file_name: str):
+    """Processes a single FBX file to generate a SkeletonMotion file."""
+    fbx_file = os.path.join(cmu_folder, file_name)
+    motion_file = os.path.join(motion_folder, file_name[:-4]+".npy")
+    
+    # Skip existing
+    if os.path.exists(motion_file):
+        return
 
-# visualize motion
-plot_skeleton_motion_interactive(motion)
+    # Import FBX file and process motion
+    motion = SkeletonMotion.from_fbx(
+        fbx_file_path=fbx_file,
+        root_joint="Hips",
+        fps=60
+    )
+    motion.to_file(motion_file)
+
+    # Update the progress bar
+    with lock:
+        counter.value += 1
+
+# Ensure output folder exists
+os.makedirs(motion_folder, exist_ok=True)
+
+# Initialize progress bar
+with tqdm(desc="Processing files", total=len(files)) as pbar:
+    def update_progress(*args):
+        with lock:
+            pbar.update(1)
+
+    # Process files with multiprocessing
+    with Pool(processes=os.cpu_count()) as pool:
+        for file_name in files:
+            pool.apply_async(_process, args=(file_name,), callback=update_progress)
+        pool.close()
+        pool.join()

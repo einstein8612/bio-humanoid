@@ -5,9 +5,9 @@ Stephen Brawner (brawner@gmail.com)
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="h1_description">
-  <mujoco>
-    <compiler meshdir="../meshes" discardvisual="false" />
-  </mujoco>
+  <!-- <mujoco>
+    <compiler meshdir=".../meshes" discardvisual="false" />
+  </mujoco> -->
 
 
   <!-- [CAUTION] uncomment when convert to mujoco -->
@@ -40,7 +40,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="pelvis.STL" />
+          filename="../meshes/pelvis.STL" />
       </geometry>
       <material
         name="dark">
@@ -51,7 +51,8 @@ Stephen Brawner (brawner@gmail.com)
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <sphere radius="0.05"/>
+        <mesh
+          filename="../meshes/pelvis.STL" />
       </geometry>
     </collision>
   </link>
@@ -77,7 +78,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_hip_yaw_link.STL" />
+          filename="../meshes/left_hip_yaw_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -132,7 +133,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_hip_roll_link.STL" />
+          filename="../meshes/left_hip_roll_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -187,7 +188,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_hip_pitch_link.STL" />
+          filename="../meshes/left_hip_pitch_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -242,7 +243,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_knee_link.STL" />
+          filename="../meshes/left_knee_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -297,7 +298,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_ankle_link.STL" />
+          filename="../meshes/left_ankle_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -352,7 +353,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_hip_yaw_link.STL" />
+          filename="../meshes/right_hip_yaw_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -407,7 +408,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_hip_roll_link.STL" />
+          filename="../meshes/right_hip_roll_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -462,7 +463,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_hip_pitch_link.STL" />
+          filename="../meshes/right_hip_pitch_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -517,7 +518,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_knee_link.STL" />
+          filename="../meshes/right_knee_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -572,7 +573,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_ankle_link.STL" />
+          filename="../meshes/right_ankle_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -627,7 +628,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="torso_link.STL" />
+          filename="../meshes/torso_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -638,13 +639,14 @@ Stephen Brawner (brawner@gmail.com)
     <collision>
       <origin xyz="0 0 0.15" rpy="0 0 0" />
       <geometry>
-        <box size="0.08 0.16 0.1"/>
+        <mesh
+          filename="../meshes/torso_link.STL" />
       </geometry>
     </collision>
   </link>
   <joint
     name="torso_joint"
-    type="revolute">
+    type="fixed">
     <origin
       xyz="0 0 0"
       rpy="0 0 0" />
@@ -682,7 +684,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_shoulder_pitch_link.STL" />
+          filename="../meshes/left_shoulder_pitch_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -737,7 +739,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_shoulder_roll_link.STL" />
+          filename="../meshes/left_shoulder_roll_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -792,7 +794,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_shoulder_yaw_link.STL" />
+          filename="../meshes/left_shoulder_yaw_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -847,7 +849,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="left_elbow_link.STL" />
+          filename="../meshes/left_elbow_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -902,7 +904,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_shoulder_pitch_link.STL" />
+          filename="../meshes/right_shoulder_pitch_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -957,7 +959,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_shoulder_roll_link.STL" />
+          filename="../meshes/right_shoulder_roll_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -1012,7 +1014,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_shoulder_yaw_link.STL" />
+          filename="../meshes/right_shoulder_yaw_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -1067,7 +1069,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="right_elbow_link.STL" />
+          filename="../meshes/right_elbow_link.STL" />
       </geometry>
       <material
         name="dark">
@@ -1120,7 +1122,7 @@ Stephen Brawner (brawner@gmail.com)
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="logo_link.STL" />
+          filename="../meshes/logo_link.STL" />
       </geometry>
       <material
         name="white">

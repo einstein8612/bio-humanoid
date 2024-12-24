@@ -160,8 +160,6 @@ def play(args):
     
     if RENDER:
         video.release()
-    
-    sleep(10000)
 
 if __name__ == '__main__':
     EXPORT_POLICY = True

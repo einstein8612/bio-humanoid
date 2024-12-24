@@ -35,8 +35,8 @@ class H1Cfg(LeggedRobotCfg):
         foot_name = "ankle"
         knee_name = "knee"
 
-        terminate_after_contacts_on = ['pelvis']
-        penalize_contacts_on = ["pelvis"]
+        terminate_after_contacts_on = ["torso_link"]
+        penalize_contacts_on = ["shoulder", "elbow", "hip"]
         self_collisions = 0  # 1 to disable, 0 to enable...bitwise filter
         flip_visual_attachments = False
         replace_cylinder_with_capsule = False
@@ -74,7 +74,7 @@ class H1Cfg(LeggedRobotCfg):
     class init_state(LeggedRobotCfg.init_state):
         pos = [0.0, 0.0, 0.95]
 
-        # 18 Actions
+        # 19 Actions
         default_joint_angles = {  # = target angles [rad] when action = 0.0
             'left_hip_yaw_joint': 0.,
             'left_hip_roll_joint': 0,

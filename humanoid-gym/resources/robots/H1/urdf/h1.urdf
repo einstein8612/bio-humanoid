@@ -646,7 +646,7 @@ Stephen Brawner (brawner@gmail.com)
   </link>
   <joint
     name="torso_joint"
-    type="fixed">
+    type="revolute">
     <origin
       xyz="0 0 0"
       rpy="0 0 0" />

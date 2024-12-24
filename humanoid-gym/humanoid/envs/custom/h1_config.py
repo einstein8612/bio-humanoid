@@ -9,11 +9,15 @@ class H1Cfg(LeggedRobotCfg):
         # change the observation dim
         frame_stack = 15
         c_frame_stack = 3
-        num_single_obs = 65
+        num_actions = 19
+
+        # Observables
+        num_single_obs = 11 + num_actions*3
         num_observations = int(frame_stack * num_single_obs)
-        single_num_privileged_obs = 97
+        single_num_privileged_obs = 25 + num_actions*4
         num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
-        num_actions = 18
+
+        # Training envs
         num_envs = 1000
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions

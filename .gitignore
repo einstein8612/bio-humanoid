@@ -1,3 +1,10 @@
 .venv
 CMU_fbx
 data
+
+# Libraries
+sip-4.19.3
+isaacgym
+
+# Python
+**/__pycache__

@@ -148,11 +148,11 @@ class H1FreeEnv(LeggedRobot):
         self.add_noise = self.cfg.noise.add_noise
         noise_scales = self.cfg.noise.noise_scales
         noise_vec[0: 5] = 0.  # commands
-        noise_vec[5: 23] = noise_scales.dof_pos * self.obs_scales.dof_pos
-        noise_vec[23: 41] = noise_scales.dof_vel * self.obs_scales.dof_vel
-        noise_vec[41: 59] = 0.  # previous actions
-        noise_vec[59: 62] = noise_scales.ang_vel * self.obs_scales.ang_vel   # ang vel
-        noise_vec[62: 65] = noise_scales.quat * self.obs_scales.quat         # euler x,y
+        noise_vec[5: 24] = noise_scales.dof_pos * self.obs_scales.dof_pos
+        noise_vec[24: 43] = noise_scales.dof_vel * self.obs_scales.dof_vel
+        noise_vec[43: 62] = 0.  # previous actions
+        noise_vec[62: 65] = noise_scales.ang_vel * self.obs_scales.ang_vel   # ang vel
+        noise_vec[65: 68] = noise_scales.quat * self.obs_scales.quat         # euler x,y
         return noise_vec
 
 

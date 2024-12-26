@@ -43,6 +43,9 @@ from .custom.humanoid_arms_env import XBotLArmsFreeEnv
 from .custom.h1_config import H1Cfg, H1CfgPPO
 from .custom.h1_env import H1FreeEnv
 
+# H1Dance
+from .custom.h1_dance_config import H1DanceCfg, H1DanceCfgPPO
+from .custom.h1_dance_env import H1DanceFreeEnv
 
 from humanoid.utils.task_registry import task_registry
 
@@ -50,3 +53,4 @@ from humanoid.utils.task_registry import task_registry
 task_registry.register( "humanoid_ppo", XBotLFreeEnv, XBotLCfg(), XBotLCfgPPO() )
 task_registry.register( "humanoid_arms_ppo", XBotLArmsFreeEnv, XBotLArmsCfg(), XBotLArmsCfgPPO() )
 task_registry.register( "h1_ppo", H1FreeEnv, H1Cfg(), H1CfgPPO() )
+task_registry.register( "h1_dance", H1DanceFreeEnv, H1DanceCfg(), H1DanceCfgPPO() )

@@ -306,6 +306,7 @@ class H1DanceFreeEnv(LeggedRobot):
         obs_buf = torch.cat((
             q,    # 19D
             dq,  # 19D
+            diff,
             self.actions,   # 19D
             self.base_ang_vel * self.obs_scales.ang_vel,  # 3
             self.base_euler_xyz * self.obs_scales.quat,  # 3

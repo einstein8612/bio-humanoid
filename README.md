@@ -1,3 +1,7 @@
+# Full-body control
+
+<img src="./assets/box.webp" width="256">
+
 # Disclaimer
 
 Only tested and verified on Arch Linux. For any other distro your mileage may vary.

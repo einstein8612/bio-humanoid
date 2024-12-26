@@ -12,19 +12,20 @@ class H1DanceCfg(LeggedRobotCfg):
         num_actions = 19
 
         # Observables
-        num_single_obs = 7 + num_actions*3
+        num_single_obs = 7 + num_actions*4
         num_observations = int(frame_stack * num_single_obs)
         single_num_privileged_obs = 17 + num_actions*4
         num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
 
         # Training envs
-        num_envs = 2000
+        num_envs = 1000
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions
 
     class motion:
         # motion_file = "../../poselib/data/h1_motions/18_15.npy"
-        motion_file = "../../poselib/data/h1_motions/21_01.npy"
+        # motion_file = "../../poselib/data/h1_motions/115_07.npy"
+        motion_file = "../../poselib/data/h1_motions/08_04.npy"
 
     class safety:
         # safety factors
@@ -104,10 +105,10 @@ class H1DanceCfg(LeggedRobotCfg):
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
         stiffness = {
-            'hip_roll': 200.0,
-            'hip_yaw': 200.0,
-            'hip_pitch': 200.0,
-            'knee': 200.0,
+            'hip_roll': 150.0,
+            'hip_yaw': 150.0,
+            'hip_pitch': 150.0,
+            'knee': 150.0,
             'ankle': 15.0,
             'torso': 300.0,
             'shoulder_roll': 50.0,
@@ -206,7 +207,7 @@ class H1DanceCfg(LeggedRobotCfg):
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             # track_vel_hard = 0.5
             # base pos
-            default_joint_pos = 0.5
+            default_joint_pos = 0.1
             base_acc = 0.2
             # movement = 0.25
             # energy
@@ -238,11 +239,11 @@ class H1DanceCfgPPO(LeggedRobotCfgPPO):
         critic_hidden_dims = [768, 256, 128]
 
     class algorithm(LeggedRobotCfgPPO.algorithm):
-        entropy_coef = 0.001
-        learning_rate = 1e-5
-        num_learning_epochs = 2
-        gamma = 0.994
-        lam = 0.9
+        entropy_coef = 0.005
+        learning_rate = 2.e-4
+        num_learning_epochs = 5
+        gamma = 0.99
+        lam = 0.95
         num_mini_batches = 4
 
     class runner:

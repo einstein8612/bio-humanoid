@@ -53,8 +53,10 @@ class H1DanceFreeEnv(LeggedRobot):
         reset_idx(env_ids): Resets the environment for the specified environment IDs.
     '''
 
-    def __init__(self, cfg: H1DanceCfg, sim_params, physics_engine, sim_device, headless):
+    def __init__(self, cfg: H1DanceCfg, sim_params, physics_engine, sim_device, headless, played=False):
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
+        self.played = played
+
         self.last_feet_z = 0.05
         self.feet_height = torch.zeros((self.num_envs, 2), device=self.device)
 
@@ -63,6 +65,10 @@ class H1DanceFreeEnv(LeggedRobot):
 
         self.total_frames = self.motion.tensor.shape[0]
         self.start_frame_buf = torch.zeros((self.num_envs,), dtype=torch.int64, device=self.device)
+        
+        # If it's played, we don't want to randomize the start
+        if played:
+            self.start_frame_buf = torch.ones_like(self.start_frame_buf)
 
         self.reset_idx(torch.tensor(range(self.num_envs), device=self.device))
         self.compute_observations()
@@ -335,6 +341,9 @@ class H1DanceFreeEnv(LeggedRobot):
             self.critic_history[i][env_ids] *= 0
 
         self.start_frame_buf[env_ids] = torch.randint(1, self.total_frames, (len(env_ids),), device=self.device)
+        # If it's played, we don't want to randomize the start
+        if self.played:
+            self.start_frame_buf = torch.ones_like(self.start_frame_buf)
 
 # ================================================ Rewards ================================================== #
     def _reward_alive(self):
@@ -348,6 +357,18 @@ class H1DanceFreeEnv(LeggedRobot):
         pos_target = self.ref_dof_pos.clone()
         diff = joint_pos - pos_target
         r = torch.exp(-0.7 * torch.norm(diff, dim=1))
+        return r
+    
+    def _reward_arm_joint_pos(self):
+        """
+        Calculates the reward based on the difference between the current joint positions and the target joint positions. Only
+        takes into account the arm joints, since we can move them relatively safely without affecting the robot's stability so
+        we reward making arms more expressive.
+        """
+        joint_pos = self.dof_pos.clone()
+        pos_target = self.ref_dof_pos.clone()
+        diff = joint_pos - pos_target
+        r = torch.exp(-0.7 * torch.norm(diff[:, 11:], dim=1))
         return r
     
     def _reward_joint_vel(self):

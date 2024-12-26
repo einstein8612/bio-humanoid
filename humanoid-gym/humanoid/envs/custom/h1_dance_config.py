@@ -8,7 +8,7 @@ class H1DanceCfg(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
         # change the observation dim
         frame_stack = 15
-        c_frame_stack = 3
+        c_frame_stack = 5
         num_actions = 19
 
         # Observables
@@ -18,12 +18,13 @@ class H1DanceCfg(LeggedRobotCfg):
         num_privileged_obs = int(c_frame_stack * single_num_privileged_obs)
 
         # Training envs
-        num_envs = 1000
+        num_envs = 2000
         episode_length_s = 24     # episode length in seconds
         use_ref_actions = False   # speed up training by using reference actions
 
     class motion:
-        motion_file = "../../poselib/data/h1_motions/18_15.npy"
+        # motion_file = "../../poselib/data/h1_motions/18_15.npy"
+        motion_file = "../../poselib/data/h1_motions/21_01.npy"
 
     class safety:
         # safety factors
@@ -191,9 +192,10 @@ class H1DanceCfg(LeggedRobotCfg):
         max_contact_force = 700  # Forces above this value are penalized
 
         class scales:
-            alive = 1.
+            alive = 0.5
             # reference motion tracking
             joint_pos = 5
+            arm_joint_pos = 2.5
             joint_vel = 1
             joint_ang_vel = 0.5
             # contact

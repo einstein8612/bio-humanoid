@@ -202,7 +202,7 @@ class H1DanceCfg(LeggedRobotCfg):
             # contact
             feet_contact_forces = -0.01
             # vel tracking
-            # tracking_lin_vel = 1.2
+            tracking_lin_vel = 1.2
             # tracking_ang_vel = 1.1
             vel_mismatch_exp = 0.5  # lin_z; ang x,y
             # track_vel_hard = 0.5
@@ -249,7 +249,7 @@ class H1DanceCfgPPO(LeggedRobotCfgPPO):
     class runner:
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
-        num_steps_per_env = 60  # per iteration
+        num_steps_per_env = 30  # per iteration
         max_iterations = 500  # number of policy updates
 
         # logging

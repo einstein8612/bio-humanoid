@@ -447,14 +447,14 @@ class H1DanceFreeEnv(LeggedRobot):
 
     #     return (lin_vel_error_exp + ang_vel_error_exp) / 2. - linear_error
 
-    # def _reward_tracking_lin_vel(self):
-    #     """
-    #     Tracks linear velocity commands along the xy axes. 
-    #     Calculates a reward based on how closely the robot's linear velocity matches the commanded values.
-    #     """
-    #     lin_vel_error = torch.sum(torch.square(
-    #         self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
-    #     return torch.exp(-lin_vel_error * self.cfg.rewards.tracking_sigma)
+    def _reward_tracking_lin_vel(self):
+        """
+        Tracks linear velocity commands along the xy axes. 
+        Calculates a reward based on how closely the robot's linear velocity matches the commanded values.
+        """
+        lin_vel_error = torch.sum(torch.square(
+            self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
+        return torch.exp(-lin_vel_error * self.cfg.rewards.tracking_sigma)
 
     # def _reward_tracking_ang_vel(self):
     #     """

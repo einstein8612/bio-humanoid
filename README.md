@@ -1,6 +1,7 @@
 # Full-body control
 
 <img src="./assets/box.webp" width="256">
+<img src="./assets/motion.gif" width="256">
 
 # Disclaimer
 

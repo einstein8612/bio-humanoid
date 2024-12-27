@@ -98,8 +98,7 @@ class TaskRegistry():
                             sim_params=sim_params,
                             physics_engine=args.physics_engine,
                             sim_device=args.sim_device,
-                            headless=args.headless,
-                            played=played)
+                            headless=args.headless)
         self.env_cfg_for_wandb = env_cfg
         return env, env_cfg
 
